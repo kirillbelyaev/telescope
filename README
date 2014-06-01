@@ -22,7 +22,7 @@ Winter's Tale, Act 3, Scene 1. William Shakespeare
 
 
 ####################
-# WHY you need it? #
+# WHY do you need it? #
 ####################
 
 The general scenario for TeleScope deployment is the need for consistent/selective replication of XML message stream from a single source publisher to multiple destinations for ETL (Extract, Transform, Load) purposes. The replication is formed through establishing a network of interconnected TeleScope brokers:
