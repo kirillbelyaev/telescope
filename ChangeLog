@@ -32,3 +32,9 @@ made executable continue to process stream (instead of terminating) after encoun
 moved sample data files into the data directory
 Changed the definition of the service ports: active ports now are: 50000, 50001, 50002
 Added the ports info printed at stdout for every run 
+
+
+
+Changes in telescope 1.0.2: /06/03/14
+
+Improvements in the ppt presentation and added a new directory for XML converter utility
