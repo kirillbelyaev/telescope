@@ -1973,6 +1973,7 @@ if (xlen > 8) //if less then that it is probably some junk...
             writeQueueTable((void *) buf);
         
         xmlFreeDoc(doc);
+        doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
 }
 
 //printf("sendFile: buf chunk is:%s\n", buf);
