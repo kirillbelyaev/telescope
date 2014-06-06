@@ -356,19 +356,32 @@ fprintf(logfile, "now we parse the data_ptr->out_m in memory and get all the ele
 //XML stuff
 
 //doc = xmlReadMemory(data_ptr->out, sizeof(data_ptr->out), "next_bgp_m.xml", NULL, 0);
-doc = xmlReadMemory(data_ptr->out, strlen(data_ptr->out), "next_bgp_m.xml", NULL, 0);
+doc = xmlReadMemory(data_ptr->out, strlen(data_ptr->out), "buffer.xml", NULL, 0);
 
 if (doc == NULL) {
-        fprintf(stderr, "Failed to parse document!\n");
+        fprintf(stderr, "receive_xml(): Failed to parse document!\n");
+        //xmlFreeDoc(doc); /* Thu Jun  5 17:50:48 MDT 2014 */
+        //fprintf(stdout, "receive_xml(): freed document!\n"); /* Thu Jun  5 17:50:48 MDT 2014 */
         return (-1);
                  }
 
 /*Get the root element node */
 root_element = xmlDocGetRootElement(doc);
 
+if (root_element == NULL) { /* Thu Jun  5 17:50:48 MDT 2014 */
+        fprintf(stderr, "receive_xml(): root element of the XML doc is NULL!\n");
+        xmlFreeDoc(doc);
+        doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
+        fprintf(stdout, "receive_xml(): freed document!\n");
+        return (-1);
+                          }
+
+
 analyze(filename, root_element);
 
 xmlFreeDoc(doc);
+
+doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
 
 TotalMessagesReceived++;//count the number of BGP messages received
         return 0;
@@ -1525,7 +1538,7 @@ fprintf(logfile, "now we parse the bgp_m in memory and get all the elements\n" )
 LIBXML_TEST_VERSION
 
 //doc = xmlReadMemory(bgp_m_ptr, sizeof(bgp_m), "bgp_m.xml", NULL, 0);
-doc = xmlReadMemory(bgp_m_ptr, strlen(bgp_m_ptr), "bgp_m.xml", NULL, 0);
+doc = xmlReadMemory(bgp_m_ptr, strlen(bgp_m_ptr), "buffer.xml", NULL, 0);
 
 if (doc == NULL) {
         fprintf(stderr, "Failed to parse document\n");
@@ -1535,9 +1548,20 @@ if (doc == NULL) {
 /*Get the root element node */
 root_element = xmlDocGetRootElement(doc);
 
+if (root_element == NULL) { /* Fri Jun 6 15:27:46 MDT 2014 */
+        fprintf(stderr, "receive_xml(): root element of the XML doc is NULL!\n");
+        xmlFreeDoc(doc);
+        doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
+        fprintf(stdout, "receive_xml(): freed document!\n");
+        return (-1);
+                          }
+
 analyze(filename, root_element);
-    //free the document
-    xmlFreeDoc(doc);
+
+//free the document
+xmlFreeDoc(doc);
+doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
+    
 //this is how we try to free mem
 memset(buf_ptr, '\0', sizeof(buf));
 memset(bgp_m_ptr, '\0', sizeof(bgp_m));
@@ -1606,20 +1630,29 @@ fprintf(logfile, "now we parse the bgp_m in memory and get all the elements\n" )
 
 //XML stuff
 
-doc = xmlReadMemory(bgp_m, strlen(bgp_m), "next_bgp_m.xml", NULL, 0);
+doc = xmlReadMemory(bgp_m, strlen(bgp_m), "buffer.xml", NULL, 0);
 
 if (doc == NULL) {
-        fprintf(stderr, "Failed to parse document\n");
+        fprintf(stderr, "secondMessage(): Failed to parse document\n");
         return -1;
                  }
 
 /*Get the root element node */
-    root_element = xmlDocGetRootElement(doc);
+root_element = xmlDocGetRootElement(doc);
+
+if (root_element == NULL) { /* Fri Jun 6 15:27:46 MDT 2014 */
+        fprintf(stderr, "secondMessage(): root element of the XML doc is NULL!\n");
+        xmlFreeDoc(doc);
+        doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
+        fprintf(stdout, "secondMessage(): freed document!\n");
+        return (-1);
+                          }    
 
 //call the magic function
 analyze(filename, root_element);
 
-    xmlFreeDoc(doc);
+xmlFreeDoc(doc);
+doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
 
 strcpy(buf, "");
 strcpy(bgp_m, "");

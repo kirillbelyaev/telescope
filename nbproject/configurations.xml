@@ -3,7 +3,7 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="TeleScope-ng">
       <df name="tests">
-        <in>newsimpletest.c</in>
+        <in>tests.c</in>
       </df>
       <in>definitions.h</in>
       <in>functions.h</in>
@@ -84,7 +84,7 @@
       </item>
       <item path="telescope.c" ex="false" tool="0" flavor2="0">
       </item>
-      <item path="tests/newsimpletest.c" ex="false" tool="0" flavor2="0">
+      <item path="tests/tests.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>

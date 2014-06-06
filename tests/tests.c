@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "definitions.h"
 
 #define MAX_LINE 4096
 
@@ -128,6 +129,80 @@ void testDecrement(void)
     
 }
 
+int receive_xml(char *filename, struct xml *data_ptr)
+{
+   // return -1;
+    return 0;
+}
+
+
+void processStream(void)
+{
+ while (terminateFlag != 1) {
+
+data_ptr = malloc(sizeof(data));
+
+if (data_ptr == NULL) { data_ptr = NULL; return; } //KB: have to check memory allocation
+
+strcpy(data_ptr->in, "");
+strcpy(data_ptr->out, "");
+
+
+printf("processStream: about to call receive_xml() \n");
+
+if (receive_xml(filename, data_ptr) == -1) {
+
+memset(data_ptr->in, '\0', sizeof(data_ptr->in));
+memset(data_ptr->out, '\0', sizeof(data_ptr->out));
+
+data_ptr =  realloc(data_ptr, sizeof(char));
+if (data_ptr != NULL)
+        free(data_ptr);
+data_ptr = NULL; //KB: set to NULL -  without setting to NULL telescope was giving seg. faults when stream is interrupted 
+// break; /*  Sun May 25 15:53:50 PDT 2014 */
+continue; /* continue operating if the message is malformed just skip it. Sun May 25 15:53:50 PDT 2014 */
+
+                                           }
+
+printf("processStream: reached only if receive_xml() returns 0 \n");
+
+memset(data_ptr->in, '\0', sizeof(data_ptr->in));
+memset(data_ptr->out, '\0', sizeof(data_ptr->out));
+data_ptr =  realloc(data_ptr, sizeof(char));
+if (data_ptr != NULL)
+        free(data_ptr);
+data_ptr = NULL;
+
+          		   }//end of main loop   
+}
+
+void processStreamMock(void)
+{
+ while (terminateFlag != 1) {
+
+data_ptr = NULL;
+
+if (data_ptr == NULL) { data_ptr = NULL; return; } //KB: have to check memory allocation
+
+printf("processStream: about to call receive_xml() \n");
+
+if (receive_xml(filename, data_ptr) == -1) {
+
+data_ptr = NULL; //KB: set to NULL -  without setting to NULL telescope was giving seg. faults when stream is interrupted 
+// break; /*  Sun May 25 15:53:50 PDT 2014 */
+continue; /* continue operating if the message is malformed just skip it. Sun May 25 15:53:50 PDT 2014 */
+
+                                           }
+
+printf("processStream: reached only if receive_xml() returns 0 \n");
+
+data_ptr = NULL;
+
+          		   }//end of main loop   
+}
+
+
+
 
 int main(int argc, char** argv) {
     
@@ -162,7 +237,13 @@ int main(int argc, char** argv) {
     
     //testSwap2();
     
-    testDecrement();
+    //testDecrement();
+    
+    //processStreamMock();
+    
+    processStream(); //passed test both with 0/-1 input from receive_xml()
+    
+    
     
     
     return (EXIT_SUCCESS);

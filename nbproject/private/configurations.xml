@@ -4,8 +4,6 @@
     <df root="." name="TeleScope-ng">
       <df name="bin">
       </df>
-      <df name="data">
-      </df>
       <df name="doc">
       </df>
       <df name="Obj">
@@ -21,7 +19,30 @@
         <in>telescope.c</in>
       </df>
       <df name="tests">
-        <in>newsimpletest.c</in>
+        <in>definitions.h</in>
+        <in>tests.c</in>
+      </df>
+      <df name="tpc-h-sample-xml-data">
+      </df>
+      <df name="XMLConverter">
+        <df name="build">
+          <df name="classes">
+            <df name="xmlconverter">
+            </df>
+          </df>
+          <df name="empty">
+          </df>
+          <df name="generated-sources">
+            <df name="ap-source-output">
+            </df>
+          </df>
+        </df>
+        <df name="dist">
+        </df>
+        <df name="src">
+          <df name="xmlconverter">
+          </df>
+        </df>
       </df>
       <in>definitions.h</in>
       <in>functions.h</in>
