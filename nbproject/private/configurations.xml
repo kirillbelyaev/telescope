@@ -18,6 +18,46 @@
         <in>queuelib.h</in>
         <in>telescope.c</in>
       </df>
+      <df name="telescope-cf-lib">
+        <df name="build">
+          <df name="classes">
+            <df name="exceptions">
+            </df>
+            <df name="iface">
+            </df>
+            <df name="implementation">
+            </df>
+          </df>
+          <df name="empty">
+          </df>
+          <df name="generated-sources">
+            <df name="ap-source-output">
+            </df>
+          </df>
+        </df>
+        <df name="dist">
+        </df>
+        <df name="doc">
+        </df>
+        <df name="lib">
+          <df name="CopyLibs">
+          </df>
+          <df name="junit">
+          </df>
+          <df name="junit_4">
+          </df>
+        </df>
+        <df name="src">
+          <df name="exceptions">
+          </df>
+          <df name="iface">
+          </df>
+          <df name="implementation">
+          </df>
+        </df>
+        <df name="test">
+        </df>
+      </df>
       <df name="tests">
         <in>definitions.h</in>
         <in>tests.c</in>

@@ -347,6 +347,14 @@ refilter[7] = filter[7];
 refilter[8] = 'x';//lets put a guard against accidental 0 in the string that might make a length value 10 times bigger...
 
 msg_len = atoi(refilter);
+
+if (msg_len >= MAX_LINE*MAX_LINE) /* skip message larger then a predefined size:  Tue Jun 10 11:43:47 PDT 2014 */
+{
+    fprintf(stderr, "receive_xml(): Message is too big! Skipping.\n");
+    return -1;
+}
+
+
 strcpy(data_ptr->in, "");
 rcv = recv(peer_sock, data_ptr->in, msg_len - start_len_next, MSG_WAITALL);
 
@@ -356,7 +364,9 @@ fprintf(logfile, "now we parse the data_ptr->out_m in memory and get all the ele
 //XML stuff
 
 //doc = xmlReadMemory(data_ptr->out, sizeof(data_ptr->out), "next_bgp_m.xml", NULL, 0);
-doc = xmlReadMemory(data_ptr->out, strlen(data_ptr->out), "buffer.xml", NULL, 0);
+//doc = xmlReadMemory(data_ptr->out, strlen(data_ptr->out), "buffer.xml", NULL, 0);
+
+doc = xmlParseMemory(data_ptr->out, strlen(data_ptr->out)); /* a cleaner way to parse: Tue Jun 10 11:54:44 PDT 2014 */
 
 if (doc == NULL) {
         fprintf(stderr, "receive_xml(): Failed to parse document!\n");
