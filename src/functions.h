@@ -366,7 +366,9 @@ fprintf(logfile, "now we parse the data_ptr->out_m in memory and get all the ele
 //doc = xmlReadMemory(data_ptr->out, sizeof(data_ptr->out), "next_bgp_m.xml", NULL, 0);
 //doc = xmlReadMemory(data_ptr->out, strlen(data_ptr->out), "buffer.xml", NULL, 0);
 
-doc = xmlParseMemory(data_ptr->out, strlen(data_ptr->out)); /* a cleaner way to parse: Tue Jun 10 11:54:44 PDT 2014 */
+//doc = xmlParseMemory(data_ptr->out, strlen(data_ptr->out)); /* a cleaner way to parse: Tue Jun 10 11:54:44 PDT 2014 */
+
+doc = xmlParseMemory(data_ptr->out, msg_len); /* a cleaner way to parse: Wed Jun 11 17:15:38 MDT 2014 */
 
 if (doc == NULL) {
         fprintf(stderr, "receive_xml(): Failed to parse document!\n");
@@ -2019,6 +2021,8 @@ socklen_t clientNameLen = sizeof(clientName);
 int myID;
 Queue XMLQ = NULL;
 
+xmlDoc *doc = NULL; /* Wed Jun 11 12:02:33 PDT 2014 */
+
 int i,j;
 char filter[8];
 char refilter[9];
@@ -2086,7 +2090,27 @@ refilter[7] = filter[7];
 refilter[8] = 'x';//lets put a guard against accidental 0 in the string that might make a length value 10 times bigger...
 
 msg_len = atoi(refilter);
+
+if (msg_len >= MAX_LINE*MAX_LINE) /* skip message larger then a predefined size:  Wed Jun 11 12:02:33 PDT 2014 */
+{
+    fprintf(stderr, "Reader(): Message is too big! Skipping.\n");
+    continue;
+}
+
 fprintf(logfile, "Reader: sending the full XML entry from the Queue\n" );
+
+
+doc = xmlParseMemory((char *) xmlR, msg_len); /* a cleaner way to parse: Wed Jun 11 12:02:33 PDT 2014 */
+
+if (doc == NULL) { /* Wed Jun 11 12:02:33 PDT 2014 */
+        fprintf(stderr, "Reader(): Failed to parse document!\n");
+        continue;
+                 } else 
+                 {
+                     xmlFreeDoc(doc);
+                     doc = NULL;
+                 }
+
 
 //if (write(sock, xmlR, msg_len) != msg_len)//we send just the exact message length to avoid junk after that
 //if (send(sock, xmlR, msg_len, 0) != msg_len)////we send just the exact message length to avoid junk after that
