@@ -356,10 +356,20 @@ if (msg_len >= MAX_LINE*MAX_LINE) /* skip message larger then a predefined size:
 
 
 strcpy(data_ptr->in, "");
+
+strcpy(data_ptr->in, "\0"); /* Sat Jun 14 10:13:59 PDT 2014 */
+
 rcv = recv(peer_sock, data_ptr->in, msg_len - start_len_next, MSG_WAITALL);
 
 strncat(data_ptr->out, data_ptr->in, msg_len - start_len_next); //stronger checking condition in case recv() is fooled...
 fprintf(logfile, "now we parse the data_ptr->out_m in memory and get all the elements\n" );
+
+/* introduce actual naive xml validity check before calling xmlParseMemory() to avoid seg faults caused by the library:  Sat Jun 14 10:13:59 PDT 2014 */
+if (data_ptr->out[0] != '<' && data_ptr->out[msg_len-1] != '>' && data_ptr->out[msg_len] != '\0')
+{
+        fprintf(stderr, "receive_xml(): invalid xml document in the buffer! skipping.\n");
+        return (-1);
+}
 
 //XML stuff
 
@@ -370,7 +380,8 @@ fprintf(logfile, "now we parse the data_ptr->out_m in memory and get all the ele
 
 doc = xmlParseMemory(data_ptr->out, msg_len); /* a cleaner way to parse: Wed Jun 11 17:15:38 MDT 2014 */
 
-if (doc == NULL) {
+//if (doc == NULL) {
+if (doc == NULL || doc == 0) {  /* sometimes 0 is returned instead of NULL - we have to accomodate that:  Sat Jun 14 11:32:07 MDT 2014 */  
         fprintf(stderr, "receive_xml(): Failed to parse document!\n");
         //xmlFreeDoc(doc); /* Thu Jun  5 17:50:48 MDT 2014 */
         //fprintf(stdout, "receive_xml(): freed document!\n"); /* Thu Jun  5 17:50:48 MDT 2014 */
