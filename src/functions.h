@@ -365,7 +365,7 @@ strncat(data_ptr->out, data_ptr->in, msg_len - start_len_next); //stronger check
 fprintf(logfile, "now we parse the data_ptr->out_m in memory and get all the elements\n" );
 
 /* introduce actual naive xml validity check before calling xmlParseMemory() to avoid seg faults caused by the library:  Sat Jun 14 10:13:59 PDT 2014 */
-if (data_ptr->out[0] != '<' && data_ptr->out[msg_len-1] != '>' && data_ptr->out[msg_len] != '\0')
+if (data_ptr->out[0] != '<' || data_ptr->out[msg_len-1] != '>' || data_ptr->out[msg_len] != '\0')
 {
         fprintf(stderr, "receive_xml(): invalid xml document in the buffer! skipping.\n");
         return (-1);

@@ -85,9 +85,9 @@ char **pptr;
 	struct xml *data_ptr = NULL;
 	
 //buffers for holding incoming xml streams	
-	char buf[512*MAX_LINE];
+	char buf[MAX_LINE*MAX_LINE];
 	char * buf_ptr = NULL;
-	char bgp_m[512*MAX_LINE];
+	char bgp_m[MAX_LINE*MAX_LINE];
 	char * bgp_m_ptr = NULL;
 
 //xml parsing globals
@@ -165,8 +165,8 @@ const char TeleScopeLog[] = "/var/log/telescope.log";//default log file location
 //XML object structure: in - incoming raw data stream; out - refined xml data object
 struct xml {
 char type;
-char in[512*MAX_LINE];
-char out[512*MAX_LINE];
+char in[MAX_LINE*MAX_LINE];
+char out[MAX_LINE*MAX_LINE];
            };
 
 const xmlChar start[] = "<xml><XML_MESSAGE length=\"00002275\"";
