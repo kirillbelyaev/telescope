@@ -1924,8 +1924,8 @@ exit(-1);
 
 int readDataFile(int fd) 
 {
-char buf[512*MAX_LINE];
-char buff[512*MAX_LINE];
+char buf[MAX_LINE*MAX_LINE];
+char buff[MAX_LINE*MAX_LINE];
 int r, i, j;
 char filter[8];
 char refilter[9];
@@ -1979,6 +1979,13 @@ refilter[8] = 'x';//lets put a guard against accidental 0 in the string that mig
 
 msg_len = atoi(refilter);
 
+if (msg_len >= MAX_LINE*MAX_LINE) /* skip message larger then a predefined size:  Thu Jun 19 14:53:13 MDT 2014 */
+{
+    fprintf(stderr, "readDataFile(): Message is too big! Skipping.\n");
+    return -1;
+}
+
+
 strcpy(buff, "");
 r = read(fd, buff, msg_len - start_len_next);
 strncat(buf, buff, msg_len - start_len_next); 
@@ -1987,8 +1994,15 @@ xlen = xmlStrlen((void *)buf);
 
 if (xlen > 8) //if less then that it is probably some junk...
 {
-        doc = xmlParseMemory(buf, sizeof(buf));
-        if (doc == NULL)
+    /* introduce actual naive xml validity check before calling xmlParseMemory() to avoid seg faults caused by the library:  Thu Jun 19 14:53:13 MDT 2014 */
+    if (buf[0] != '<' || buf[msg_len-1] != '>' || buf[msg_len] != '\0')
+    {
+        fprintf(stderr, "readDataFile(): invalid xml document in the buffer! skipping.\n");
+        return (-1);
+    }
+        doc = xmlParseMemory(buf, msg_len); //changed size to msg_len instead of size_of(): Thu Jun 19 14:53:13 MDT 2014
+        //if (doc == NULL)
+        if (doc == NULL || doc == 0)  /* sometimes 0 is returned instead of NULL - we have to accomodate that:  Thu Jun 19 14:53:13 MDT 2014 */      
             ;
         else
             //writeQueue(XMLQ, (void *)buf);
