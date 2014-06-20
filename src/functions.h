@@ -1924,8 +1924,8 @@ exit(-1);
 
 int readDataFile(int fd) 
 {
-char buf[MAX_LINE*MAX_LINE];
-char buff[MAX_LINE*MAX_LINE];
+char buf[512*MAX_LINE]; /* buffer size set to 2 MB - bigger size causes seg fault */
+char buff[512*MAX_LINE];/* buffer size set to 2 MB - bigger size causes seg fault */
 int r, i, j;
 char filter[8];
 char refilter[9];
@@ -1951,6 +1951,7 @@ exit(1);
 */
 
 r = read(fd, buff, strlen( (char *) start_next)); 
+
 if (r < 0)
 {
 perror("read");
@@ -1979,7 +1980,7 @@ refilter[8] = 'x';//lets put a guard against accidental 0 in the string that mig
 
 msg_len = atoi(refilter);
 
-if (msg_len >= MAX_LINE*MAX_LINE) /* skip message larger then a predefined size:  Thu Jun 19 14:53:13 MDT 2014 */
+if (msg_len >= 512*MAX_LINE) /* skip message larger then a predefined size:  Thu Jun 19 14:53:13 MDT 2014 */
 {
     fprintf(stderr, "readDataFile(): Message is too big! Skipping.\n");
     return -1;
@@ -2018,6 +2019,7 @@ if (xlen > 8) //if less then that it is probably some junk...
 strcpy(buf, "");
 memset(buff, '\0', sizeof(buff));
 memset(buf, '\0', sizeof(buff));
+
 /*
 if ((r = read(fd, buff, strlen("\n"))) < 0);//advance to a new message in a file
 {
@@ -2025,7 +2027,9 @@ perror("read");
 exit(1);
 }
 */
+
 r = read(fd, buff, strlen("\n"));//advance to a new message in a file
+
 if (r < 0)
 {
 perror("read");
