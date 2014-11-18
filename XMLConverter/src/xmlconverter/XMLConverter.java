@@ -73,6 +73,7 @@ public class XMLConverter {
 			contents = new StringBuilder();
 
 			String line = null;
+			String filteredLine = null;
 				
 			while ((line = input.readLine()) != null) {
 
@@ -150,6 +151,38 @@ public class XMLConverter {
 						contents.delete(0, contents.length());
 					}
 					
+					if (start == false && stop == false)
+                                        {  
+                                            System.out.println("nonstandard message encountered!\n");
+                                            filteredLine = filterLine(line);
+                                                
+                                            if (filteredLine != null)
+                                            {    
+                                                contents.append(filteredLine);
+                                                
+                                                message = contents.toString();
+                                                
+                                                message = message.replace("<"+Tag, startTag);
+                                                
+                                                message = message.replace("</"+Tag+">", stopTag);
+
+                                                len = message.length();
+                                                totalLen = len + 10; //10 is "" plus 8 digits of the length
+                                                
+                                                totalLenString = buildLen(totalLen);
+                                                
+                                                if (totalLenString == null) return;
+                                                
+                                                message = message.replace(startTag, startTag + "\"" + totalLenString + "\"");
+                                                
+                                                output.write(message);
+                                                output.write("\n");
+                                                start = false;
+                                                stop = false;
+                                                contents.delete(0, contents.length());
+                                            }
+                                        }
+					
 				}//end of while loop
 			
 				input.close();
@@ -160,6 +193,39 @@ public class XMLConverter {
 			System.exit(-1);
 		}
 	}
+	
+	
+	static public String filterLine(String s)
+        {
+            int start = -1;
+            int end = -1;
+            String message = null;
+
+            if (s == null) return null;
+
+            start = s.indexOf("<"+Tag);
+
+            if (start == -1) start = s.indexOf("<"+Tag+">");
+
+            if (start == -1) return null; //give up since no start tag is found
+
+            //System.out.println("start tag specified does exist!");  
+
+            end = s.indexOf("</"+Tag+">");
+
+            if (end == -1) return null;
+
+            //System.out.println("end tag specified does exist!");  
+
+            if (start == -1 && end == -1) return null;
+
+            message = s.substring(start, end+("</"+Tag+">").length()); //obtain the desired XML message
+
+            //System.out.println("message is: " + message);  
+
+            return message;
+        }
+
 	
 	static public String buildLen(Integer l)
 	{

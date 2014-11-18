@@ -38,3 +38,9 @@ Added the ports info printed at stdout for every run
 Changes in telescope 1.0.2: /06/03/14
 
 Improvements in the ppt presentation and added a new directory for XML converter utility
+
+
+Changes in telescope 1.0.2: /11/18/14
+
+Improvements in the XML converter utility - added support for generic XML obtained from Yahoo! Services where XML is not strictly separated by new lines
+Added sample S&P500 XML data samples obtained from Yahoo! Finance to the tpc-h samples directory
