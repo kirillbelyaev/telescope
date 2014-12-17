@@ -211,7 +211,7 @@ if (serverflag == 1)
 }
 
 
-InitializeParseEngine(expression, eflag, evalue);
+InitializeParseEngine(Expression, eflag, evalue);
 setSignals();
 
 if (hflag == 1 && pflag == 1) //if operating in the subscriber mode
@@ -246,7 +246,7 @@ if (hflag == 1 && pflag == 1) //if operating in the subscriber mode
         secondMessage();
     
         /* the main loop starts    */
-        processStream();
+        processStream_static_buffer();
         //Never reached unless interrupted by a TERM signal....
         terminate_(0);
 }

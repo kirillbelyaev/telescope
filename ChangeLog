@@ -44,3 +44,9 @@ Changes in telescope 1.0.2: /11/18/14
 
 Improvements in the XML converter utility - added support for generic XML obtained from Yahoo! Services where XML is not strictly separated by new lines
 Added sample S&P500 XML data samples obtained from Yahoo! Finance to the tpc-h samples directory
+
+
+Changes in telescope 1.0.3: /12/15/14
+Refactoring of some global variables and constants and function names for clarity
+MAJOR: Shift from malloc() to static buffer approach for stream processing to avoid seg faults in the client (sub) mode caused by excessive benchmarking when XML messages are arriving too fast
+Added extra validity checks in some XML processing parts of the code to minimize the errors from the libxml so that we try to provide valid XML input to the library

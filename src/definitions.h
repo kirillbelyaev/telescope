@@ -45,6 +45,7 @@ Winter's Tale, Act 3, Scene 1. William Shakespeare
 
 #include <pthread.h>
 
+#define MIN_LINE 256
 #define MAX_LINE 4096
 #define SERVER_PORT 50000
 #define STATUS_PORT 50001
@@ -81,7 +82,7 @@ char **pptr;
         struct sockaddr_in cli_sin;
 
 //xml object pointers
-	struct xml data;
+	struct xml MESSAGE;
 	struct xml *data_ptr = NULL;
 	
 //buffers for holding incoming xml streams	
@@ -91,8 +92,8 @@ char **pptr;
 	char * bgp_m_ptr = NULL;
 
 //xml parsing globals
-	char element_name[256];
-	char content[256];
+	char element_name[MIN_LINE];
+	char content[MIN_LINE];
 	int xox = -1; int zoz = -1;
 	int match = -1;
 
@@ -104,14 +105,14 @@ char **pptr;
 	int serverflag = 0;//server flag
 	int logflag = 0; //turn log file writing on
 	int dataflag = 0; //turn data file reading on
-	char filename[256];//where to write xml messages
-	char DATAfilename[256];//where to read xml data file from
+	char filename[MIN_LINE];//where to write xml messages
+	char DATAfilename[MIN_LINE];//where to read xml data file from
 
 //parsing engine globals
-	bool g_and = true;
-	bool g_or;
+	bool Global_AND = true;
+	bool Global_OR;
 	bool complex = false;
-	int exp_gn;
+	int Exp_Global_Number;
 
 struct sigaction handler;//signal handler mainly for SIGPIPE blocking
 struct sigaction term_handler;//signal handler for TERM like signals
@@ -122,7 +123,7 @@ pthread_mutex_t         terminateLock;
 static int threadIDCounter = 0; //counter to keep track of Reader's ID
 pthread_mutex_t         threadIDLock;
 
-char expression[MAX_LINE];/* assume the cmd-line expression is that long....  */
+char Expression[MAX_LINE];/* assume the cmd-line expression is that long....  */
 
 xmlDoc *doc = NULL;
 xmlNode *root_element = NULL;
@@ -174,8 +175,8 @@ const xmlChar probe[] = "<XML_MESSAGE length=\"00000128\" version=\"0.2\" xmlns=
 const xmlChar v[16*MAX_LINE];
 
 //REG_EXP
-char reg_start[256];
-char regex[256];
+char reg_start[MIN_LINE];
+char regex[MIN_LINE];
 
 char *regex_0_64 = "(([0-9]|[1-5][0-9]|6[0-3])\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))|64\\.0)$";
 char *regex_64_128 = "((6[4-9]|[7-9][0-9]|1([0-1][0-9]|2[0-7]))\\.([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-5]))|128\\.0)$";
@@ -189,15 +190,15 @@ char *regex_0_255 = "(([0-9]|[1-9][0-9]|1([0-9][0-9])|2([0-4][0-9]|5[0-4]))\\.([
 
 //arrays for holding parsed cmd search expressions
 char tuple[1024][INET_ADDRSTRLEN];
-char logic[256];
-char element[256][256];
-char operator[256];
-char value[256][256];
+char logic[MIN_LINE];
+char element[MIN_LINE][MIN_LINE];
+char operator[MIN_LINE];
+char value[MIN_LINE][MIN_LINE];
 
 //parsing engine globals
-int truth[256];
-char plogic[256];
-char expg[256][256];
+int truth[MIN_LINE];
+char plogic[MIN_LINE];
+char expression_Global[MIN_LINE][MAX_LINE];
 
 //
 //functions' declarations
@@ -249,8 +250,15 @@ int analyse (xmlNode *root_element);
 
 int clear(char *a, char *b, size_t s); //clear the arrays via memset()
 
+
+/* static buffer versions */
+int reset_static_XmlBuff(void);
+void processStream_static_buffer(void);
+int receive_xml_static_buffer(char *filename);
+
+
 //parsing engine functions
-int mytrim(char *str);
+int trim(char *str);
 int tokenize(char *exp);
 int shuffle2(int exp_gn);
 int shuffle(int exp_gn);

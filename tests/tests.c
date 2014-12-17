@@ -15,15 +15,16 @@
 
 #define MAX_LINE 4096
 
-char expg[256][256];
+char expression_Global[256][256];
 
-int exp_gn;
-char expression[MAX_LINE];
+int Exp_Global_Number;
+char Expression[MAX_LINE];
 
 const xmlChar valid_message[] = "<BGP_MESSAGE length=\"00002208\" version=\"0.4\" xmlns=\"urn:ietf:params:xml:ns:xfb-0.4\" type_value=\"2\" type=\"UPDATE\"><BGPMON_SEQ id=\"2128112124\" seq_num=\"2017269815\"/><TIME timestamp=\"1402361117\" datetime=\"2014-06-10T00:45:17Z\" precision_time=\"732\"/><PEERING as_num_len=\"2\"><SRC_ADDR><ADDRESS>192.43.217.144</ADDRESS><AFI value=\"1\">IPV4</AFI></SRC_ADDR><SRC_PORT>179</SRC_PORT><SRC_AS>14041</SRC_AS><DST_ADDR><ADDRESS>129.82.138.6</ADDRESS><AFI value=\"1\">IPV4</AFI></DST_ADDR><DST_PORT>4321</DST_PORT><DST_AS>6447</DST_AS><BGPID>0.0.0.0</BGPID></PEERING><ASCII_MSG length=\"88\"><MARKER length=\"16\">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</MARKER><UPDATE withdrawn_len=\"0\" path_attr_len=\"61\"><WITHDRAWN count=\"0\"/><PATH_ATTRIBUTES count=\"4\"><ATTRIBUTE length=\"1\"><FLAGS transitive=\"TRUE\"/><TYPE value=\"1\">ORIGIN</TYPE><ORIGIN value=\"0\">IGP</ORIGIN></ATTRIBUTE><ATTRIBUTE length=\"12\"><FLAGS transitive=\"TRUE\"/><TYPE value=\"2\">AS_PATH</TYPE><AS_PATH><AS_SEG type=\"AS_SEQUENCE\" length=\"5\"><AS>14041</AS><AS>11164</AS><AS>7473</AS><AS>17888</AS><AS>10098</AS></AS_SEG></AS_PATH></ATTRIBUTE><ATTRIBUTE length=\"4\"><FLAGS transitive=\"TRUE\"/><TYPE value=\"3\">NEXT_HOP</TYPE><NEXT_HOP>192.43.217.144</NEXT_HOP></ATTRIBUTE><ATTRIBUTE length=\"32\"><FLAGS optional=\"TRUE\" transitive=\"TRUE\"/><TYPE value=\"8\">COMMUNITIES</TYPE><COMMUNITIES><COMMUNITY><AS>7473</AS><VALUE>10000</VALUE></COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>20000</VALUE></COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>31203</VALUE></COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>31302</VALUE></COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>41204</VALUE></COMMUNITY><COMMUNITY><AS>11164</AS><VALUE>1120</VALUE></COMMUNITY><COMMUNITY><AS>11164</AS><VALUE>7880</VALUE></COMMUNITY><COMMUNITY><AS>14041</AS><VALUE>202</VALUE></COMMUNITY></COMMUNITIES></ATTRIBUTE></PATH_ATTRIBUTES><NLRI count=\"1\"><PREFIX label=\"SPATH\"><ADDRESS>202.123.88.0/24</ADDRESS><AFI value=\"1\">IPV4</AFI><SAFI value=\"1\">UNICAST</SAFI></PREFIX></NLRI></UPDATE></ASCII_MSG><OCTET_MSG><OCTETS length=\"88\">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0058020000003D4001010040020C020536D92B9C1D3145E02772400304C02BD990C008201D3127101D314E201D3179E31D317A461D31A0F42B9C04602B9C1EC836D900CA18CA7B58</OCTETS></OCTET_MSG></BGP_MESSAGE>";
 
 const xmlChar invalid_message[] = "<BGP_MESSAGE length=\"00002208\" version=\"0.4\" xmlns=\"urn:ietf:params:xml:ns:xfb-0.4\" type_value=\"2\" type=\"UPDATE\"><BGPMON_SEQ id=\"2128112124\" seq_num=\"2017269815\"/><TIME timestamp=\"1402361117\" datetime=\"2014-06-10T00:45:17Z\" precision_time=\"732\"/><PEERING as_num_len=\"2\"><SRC_ADDR><ADDRESS>192.43.217.144</ADDRESS><AFI value=\"1\">IPV4</AFI></SRC_ADDR><SRC_PORT>179</SRC_PORT><SRC_AS>14041</SRC_AS><DST_ADDR><ADDRESS>129.82.138.6</ADDRESS><AFI value=\"1\">IPV4</AFI></DST_ADDR><DST_PORT>4321</DST_PORT><DST_AS>6447</DST_AS><BGPID>0.0.0.0</BGPID></PEERING><ASCII_MSG length=\"88\"><MARKER length=\"16\">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</MARKER><UPDATE withdrawn_len=\"0\" path_attr_len=\"61\"><WITHDRAWN count=\"0\"/><PATH_ATTRIBUTES count=\"4\"><ATTRIBUTE length=\"1\"><FLAGS transitive=\"TRUE\"/><TYPE value=\"1\">ORIGIN</TYPE><ORIGIN value=\"0\">IGP</ORIGIN></ATTRIBUTE><ATTRIBUTE length=\"12\"><FLAGS transitive=\"TRUE\"/><TYPE value=\"2\">AS_PATH</TYPE><AS_PATH><AS_SEG type=\"AS_SEQUENCE\" length=\"5\"><AS>14041</AS><AS>11164</AS><AS>7473</AS><AS>17888</AS><AS>10098</AS></AS_SEG></AS_PATH></ATTRIBUTE><ATTRIBUTE length=\"4\"><FLAGS transitive=\"TRUE\"/><TYPE value=\"3\">NEXT_HOP</TYPE><NEXT_HOP>192.43.217.144</NEXT_HOP></ATTRIBUTE><ATTRIBUTE length=\"32\"><FLAGS optional=\"TRUE\" transitive=\"TRUE\"/><TYPE value=\"8\">COMMUNITIES</TYPE><COMMUNITIES><COMMUNITY><AS>7473</AS><VALUE>10000</VALUE></COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>20000</VALUE></COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>31203</VALUE></COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>31302</VALUE></COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>41204</VALUE></COMMUNITY><COMMUNITY><AS>11164</AS><VALUE>1120</VALUE></COMMUNITY><COMMUNITY><AS>11164</AS><VALUE>7880</VALUE></COMMUNITY><COMMUNITY><AS>14041</AS><VALUE>202</VALUE></COMMUNITY></COMMUNITIES></ATTRIBUTE></PATH_ATTRIBUTES><NLRI count=\"1\"><PREFIX label=\"SPATH\"><ADDRESS>202.123.88.0/24</ADDRESS><AFI value=\"1\">IPV4</AFI><SAFI value=\"1\">UNICAST</SAFI></PREFIX></NLRI></UPDATE></ASCII_MSG><OCTET_MSG><OCTETS length=\"88\">FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0058020000003D4001010040020C020536D92B9C1D3145E02772400304C02BD990C008201D3127101D314E201D3179E31D317A461D31A0F42B9C04602B9C1EC836D900CA18CA7B58</OCTETS></OCTET_MSG></BGP_MESSAGE...";
 
+const char message[] = "        <BGP_MESSAGE length=  </COMMUNITY><COMMUNITY><AS>7473</AS><VALUE>31302</VALUE>    <SRC_ADDR><ADDRESS>192.43.217.144</ADDRESS> <SRC_ADDR><ADDRESS>192.43.217.144</ADDRESS> <SRC_ADDR><ADDRESS>192.43.217.144</ADDRESS>                                                                                                      </OCTETS></OCTET_MSG></BGP_MESSAGE>                                       ";
 
 /*
  * Simple C Test Suite
@@ -46,7 +47,7 @@ k= strlen(exp);
 while (l < k)
 {
 	if (exp[l] != '(' && exp[l] != ')') {
- 	expg[h][i] = exp[l];	
+ 	expression_Global[h][i] = exp[l];	
 		i++;
 		l++;
 			   		    }		
@@ -143,12 +144,18 @@ int receive_xml(char *filename, struct xml *data_ptr)
     return 0;
 }
 
+int receive_xml_mock()
+{
+   // return -1;
+    return 0;
+}
+
 
 void processStream(void)
 {
  while (terminateFlag != 1) {
 
-data_ptr = malloc(sizeof(data));
+data_ptr = malloc(sizeof(MESSAGE));
 
 if (data_ptr == NULL) { data_ptr = NULL; return; } //KB: have to check memory allocation
 
@@ -211,7 +218,7 @@ data_ptr = NULL;
 }
 
 
-int receive_xml_2(char *buffer, struct xml *data_ptr)
+int receive_xml_dynamic_buffer(char *buffer, struct xml *data_ptr)
 {
 xmlDoc *doc = NULL;
 xmlNode *root_element = NULL;
@@ -329,11 +336,130 @@ TotalMessagesReceived++;//count the number of BGP messages received
 }
 
 
-void processStream_2(void) //with valid message
+int receive_xml_static_buffer(char *buffer)
+{
+xmlDoc *doc = NULL;
+xmlNode *root_element = NULL;
+int i,j;
+char filter[8];
+char refilter[9];
+
+int start_len_next;
+int msg_len;
+
+//rcv = recv(peer_sock, data_ptr->in, xmlStrlen(start_next), MSG_WAITALL);
+//strcpy(data_ptr->out, data_ptr->in);
+
+//start_len_next = strlen(data_ptr->in);
+//start_len_next = xmlStrlen(start_next);
+
+//extract the real length
+//for (i=21, j=0; i<start_len_next, j < 8; i++, j++) { /* Wed May 21 11:16:27 PDT 2014 */
+
+strcpy(MESSAGE.in, buffer);
+
+//fprintf(stdout, "receive_xml(): line 360 \n");
+
+/* avoid left-hand operand of comma expression has no effect [-Wunused-value] in gcc 4.8+ */
+for (i=21, j=0; j < 8; i++, j++) { /* Wed May 21 11:16:27 PDT 2014 */
+
+        filter[j] = MESSAGE.in[i];
+                                                   }
+strncpy(refilter, filter, 7);
+refilter[7] = filter[7];
+refilter[8] = 'x';//lets put a guard against accidental 0 in the string that might make a length value 10 times bigger...
+
+msg_len = atoi(refilter);
+
+if (msg_len >= MAX_LINE*MAX_LINE) /* skip message larger then a predefined size:  Tue Jun 10 11:43:47 PDT 2014 */
+{
+    fprintf(stderr, "receive_xml(): Message is too big! Skipping.\n");
+    return -1;
+}
+
+strcpy(MESSAGE.out, MESSAGE.in);
+
+/*
+printf("msg_len is: %d\n", msg_len);
+printf("data_ptr->out is: %s\n", data_ptr->out);
+
+printf("in data_ptr->out character is: %c\n", data_ptr->out[0]);
+printf("in data_ptr->out character is: %c\n", data_ptr->out[msg_len-1]);
+printf("in data_ptr->out character is: %c\n", data_ptr->out[msg_len]);
+*/
+
+
+/*/
+if (data_ptr->out[msg_len-1] != '>')
+{
+        fprintf(stderr, "receive_xml(): invalid xml document in the buffer! skipping.\n");
+        return (-1);
+}
+*/
+
+//strcpy(data_ptr->in, "");
+
+//strcpy(data_ptr->in, "\0"); /* Sat Jun 14 10:13:59 PDT 2014 */
+
+//rcv = recv(peer_sock, data_ptr->in, msg_len - start_len_next, MSG_WAITALL);
+
+//strncat(data_ptr->out, data_ptr->in, msg_len - start_len_next); //stronger checking condition in case recv() is fooled...
+//fprintf(logfile, "now we parse the data_ptr->out_m in memory and get all the elements\n" );
+
+/* introduce actual naive xml validity check before calling xmlParseMemory() to avoid seg faults caused by the library:  Sat Jun 14 10:13:59 PDT 2014 */
+if (MESSAGE.out[0] != '<' || MESSAGE.out[msg_len-1] != '>' || MESSAGE.out[msg_len] != '\0')
+{
+        fprintf(stderr, "receive_xml(): invalid xml document in the buffer! skipping.\n");
+        return (-1);
+}
+
+//exit(0);
+
+//XML stuff
+
+//doc = xmlReadMemory(data_ptr->out, sizeof(data_ptr->out), "next_bgp_m.xml", NULL, 0);
+//doc = xmlReadMemory(data_ptr->out, strlen(data_ptr->out), "buffer.xml", NULL, 0);
+
+//doc = xmlParseMemory(data_ptr->out, strlen(data_ptr->out)); /* a cleaner way to parse: Tue Jun 10 11:54:44 PDT 2014 */
+
+doc = xmlParseMemory(MESSAGE.out, msg_len); /* a cleaner way to parse: Wed Jun 11 17:15:38 MDT 2014 */
+
+//if (doc == NULL) {
+if (doc == NULL || doc == 0) {  /* sometimes 0 is returned instead of NULL - we have to accomodate that:  Sat Jun 14 11:32:07 MDT 2014 */  
+        fprintf(stderr, "receive_xml(): Failed to parse document!\n");
+        //xmlFreeDoc(doc); /* Thu Jun  5 17:50:48 MDT 2014 */
+        //fprintf(stdout, "receive_xml(): freed document!\n"); /* Thu Jun  5 17:50:48 MDT 2014 */
+        return (-1);
+                 }
+
+/*Get the root element node */
+root_element = xmlDocGetRootElement(doc);
+
+if (root_element == NULL) { /* Thu Jun  5 17:50:48 MDT 2014 */
+        fprintf(stderr, "receive_xml(): root element of the XML doc is NULL!\n");
+        xmlFreeDoc(doc);
+        doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
+        fprintf(stdout, "receive_xml(): freed document!\n");
+        return (-1);
+                          }
+
+
+//analyze(filename, root_element);
+
+xmlFreeDoc(doc);
+
+doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
+
+TotalMessagesReceived++;//count the number of BGP messages received
+        return 0;
+}
+
+
+void processStream_valid_message(void) //with valid message
 {
  while (terminateFlag != 1) {
 
-data_ptr = malloc(sizeof(data));
+data_ptr = malloc(sizeof(MESSAGE));
 
 if (data_ptr == NULL) { data_ptr = NULL; return; } //KB: have to check memory allocation
 
@@ -343,7 +469,7 @@ strcpy(data_ptr->out, "");
 
 printf("processStream: about to call receive_xml() \n");
 
-if (receive_xml_2((char *) valid_message, data_ptr) == -1) {
+if (receive_xml_dynamic_buffer((char *) valid_message, data_ptr) == -1) {
 
 
 memset(data_ptr->in, '\0', sizeof(data_ptr->in));
@@ -371,11 +497,11 @@ data_ptr = NULL;
 }
 
 
-void processStream_3(void) //with invalid message
+void processStream_invalid_message(void) //with invalid message
 {
  while (terminateFlag != 1) {
 
-data_ptr = malloc(sizeof(data));
+data_ptr = malloc(sizeof(MESSAGE));
 
 if (data_ptr == NULL) { data_ptr = NULL; return; } //KB: have to check memory allocation
 
@@ -385,7 +511,7 @@ strcpy(data_ptr->out, "");
 
 printf("processStream: about to call receive_xml() \n");
 
-if (receive_xml_2((char *) invalid_message, data_ptr) == -1) {
+if (receive_xml_dynamic_buffer((char *) invalid_message, data_ptr) == -1) {
 
 
 memset(data_ptr->in, '\0', sizeof(data_ptr->in));
@@ -410,6 +536,126 @@ if (data_ptr != NULL)
 data_ptr = NULL;
 
           		   }//end of main loop   
+}
+
+void processStream_valid_message_static_buffer(void) //with valid message
+{
+ while (terminateFlag != 1) {
+
+
+
+MESSAGE.type = 0;
+memset(MESSAGE.in, '\0', sizeof(MESSAGE.in));
+memset(MESSAGE.out, '\0', sizeof(MESSAGE.out));
+     
+strcpy(MESSAGE.in, "");
+strcpy(MESSAGE.out, "");
+
+
+printf("processStream: about to call receive_xml() \n");
+
+if (receive_xml_static_buffer((char *) valid_message) == -1) {
+//if (receive_xml_mock() == -1) {
+
+
+memset(MESSAGE.in, '\0', sizeof(MESSAGE.in));
+memset(MESSAGE.out, '\0', sizeof(MESSAGE.out));
+
+// break; /*  Sun May 25 15:53:50 PDT 2014 */
+continue; /* continue operating if the message is malformed just skip it. Sun May 25 15:53:50 PDT 2014 */
+
+                                           }
+
+printf("processStream: reached only if receive_xml() returns 0 \n");
+
+memset(MESSAGE.in, '\0', sizeof(MESSAGE.in));
+memset(MESSAGE.out, '\0', sizeof(MESSAGE.out));
+
+          		   }//end of main loop   
+}
+
+
+void processStream_invalid_message_static_buffer(void) //with valid message
+{
+ while (terminateFlag != 1) {
+
+
+
+MESSAGE.type = 0;
+memset(MESSAGE.in, '\0', sizeof(MESSAGE.in));
+memset(MESSAGE.out, '\0', sizeof(MESSAGE.out));
+     
+strcpy(MESSAGE.in, "");
+strcpy(MESSAGE.out, "");
+
+
+printf("processStream: about to call receive_xml() \n");
+
+if (receive_xml_static_buffer((char *) invalid_message) == -1) {
+//if (receive_xml_mock() == -1) {
+
+
+memset(MESSAGE.in, '\0', sizeof(MESSAGE.in));
+memset(MESSAGE.out, '\0', sizeof(MESSAGE.out));
+
+// break; /*  Sun May 25 15:53:50 PDT 2014 */
+continue; /* continue operating if the message is malformed just skip it. Sun May 25 15:53:50 PDT 2014 */
+
+                                           }
+
+printf("processStream: reached only if receive_xml() returns 0 \n");
+
+memset(MESSAGE.in, '\0', sizeof(MESSAGE.in));
+memset(MESSAGE.out, '\0', sizeof(MESSAGE.out));
+
+          		   }//end of main loop   
+}
+
+int trim(char *str)
+{
+	int i,l;
+        int size = strlen(str);
+        if (size > MAX_LINE) return -1;
+	char tmp[size];
+	char tm[size];
+        
+        printf("dest str len is %d:\n", strlen(str));
+        printf("dest str sizeof is %d:\n", sizeof(str));
+        printf("tmp len is %d:\n", strlen(tmp));
+        printf("tmp sizeof is %d:\n", sizeof(tmp));
+        
+	memset(tmp, '\0', sizeof(tmp));
+	memset(tm, '\0', sizeof(tm));
+        
+	i=0; l = 0;
+	//remove blanks from the beginning
+	while (str) {
+		if (isspace(str[i]))
+			i++;	
+			else break;
+		        }
+	while (i < strlen(str)) {
+		tmp[l] = str[i];
+			i++;
+			l++;
+				}
+	strcpy(str, tmp);
+	//remove blanks from the end
+	i = strlen(str);
+	i--; //skip the ending \0
+
+	while (str) {
+		if (isspace(str[i])) {
+			i--;	
+		         	     }
+			else break;
+		    }
+	l=i;
+
+	for (i=0; i<=l; i++) 
+		tm[i] = str[i];
+	strcpy(str, tm);
+	return 0;
 }
 
 
@@ -453,9 +699,22 @@ int main(int argc, char** argv) {
     
     //processStream(); //passed test both with 0/-1 input from receive_xml()
     
-    processStream_2();
+    //processStream_valid_message();
     
-    processStream_3();
+    //processStream_invalid_message();
+    
+    //processStream_valid_message_static_buffer();
+    
+    //processStream_invalid_message_static_buffer();
+    
+    
+    strcpy(Expression, message);
+    printf("str len is: %d:\n", strlen(Expression));
+    printf("str before trim is:|%s|\n", Expression);
+    trim (Expression);
+    printf("str after trim is:|%s|\n", Expression);
+    printf("str len is %d: \n", strlen(Expression));
+    
     
     return (EXIT_SUCCESS);
 }

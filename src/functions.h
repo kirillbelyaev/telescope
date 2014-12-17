@@ -152,7 +152,7 @@ int InitializeParseEngine(char *exp, int eflag, char *evalue)
         
         clearExpGlobals(); //05/10/12 clear the exp globals arrays
 
-             if (strlen(evalue) > 4096 )/* 09/12/11 - added extra security check */
+             if (strlen(evalue) > MAX_LINE )/* 09/12/11 - added extra security check */
 		{
 		perror("FATAL: Expression length is longer then 4096 characters! Avoiding buffer overrun!");
 		exit(-1);
@@ -161,7 +161,7 @@ int InitializeParseEngine(char *exp, int eflag, char *evalue)
         //fill the exp arrays with data 
 	if (eflag == 1) {
 	strcpy(exp, evalue);
-	mytrim(exp);
+	trim(exp);
 			}
 	//case: if exp contains ()
 	//fill the expg global arrays with data
@@ -181,45 +181,45 @@ int InitializeParseEngine(char *exp, int eflag, char *evalue)
 
         //clearExpGlobals(); //05/09/12 clear the exp globals array
         
-	exp_gn = tokenize(exp);
+	Exp_Global_Number = tokenize(exp);
 
-        fprintf(logfile, "exp_gn is:%d\n", exp_gn);
+        fprintf(logfile, "exp_gn is:%d\n", Exp_Global_Number);
         //mytrim the exps
-        for (i=0; i < exp_gn; i++) {
-        mytrim(expg[i]);
+        for (i=0; i < Exp_Global_Number; i++) {
+        trim(expression_Global[i]);
                                    }
 
         //start logic
-        for (i=0; i < exp_gn; i++) {
+        for (i=0; i < Exp_Global_Number; i++) {
         l=0;
-        if (expg[i][l] == '&' || expg[i][l] == '|') {
-                plogic[i] = expg[i][l];
-                expg[i][l] = ' ';
+        if (expression_Global[i][l] == '&' || expression_Global[i][l] == '|') {
+                plogic[i] = expression_Global[i][l];
+                expression_Global[i][l] = ' ';
                                                     }
                                    }
 //end logic
-        for (i=0; i < exp_gn; i++) {
-        l = strlen(expg[i]);
+        for (i=0; i < Exp_Global_Number; i++) {
+        l = strlen(expression_Global[i]);
         l--;
-        if (expg[i][l] == '&' || expg[i][l] == '|') {
+        if (expression_Global[i][l] == '&' || expression_Global[i][l] == '|') {
                 if (plogic[i] != '&' && plogic[i] != '|')
-                plogic[i] = expg[i][l];
+                plogic[i] = expression_Global[i][l];
                         else {
                         k=i; k++;
                 fprintf(logfile, "K is:%d\n", k);
-                plogic[k] = expg[i][l];
+                plogic[k] = expression_Global[i][l];
                              }
 
-                expg[i][l] = '\0';
+                expression_Global[i][l] = '\0';
                                                    }
                                    }
 
         //mytrim again
-        for (i=0; i < exp_gn; i++) {
-        mytrim(expg[i]);
+        for (i=0; i < Exp_Global_Number; i++) {
+        trim(expression_Global[i]);
                                    }
-        shuffle(exp_gn);
-        exp_gn = shuffle2(exp_gn);
+        shuffle(Exp_Global_Number);
+        Exp_Global_Number = shuffle2(Exp_Global_Number);
 					}//end of case: complex == true. ()
 	return 0;
 }
@@ -232,7 +232,7 @@ int ReInitializeParseEngine(int eflag, char *evalue)
         
         clearExpGlobals(); //05/10/12 clear the exp globals arrays
 
-             if (strlen(evalue) > 4096 )/* 09/12/11 - added extra security check */
+             if (strlen(evalue) > MAX_LINE )/* 09/12/11 - added extra security check */
 		{
 		perror("FATAL: Expression length is longer then 4096 characters! Avoiding buffer overrun!");
 		exit(-1);
@@ -240,12 +240,12 @@ int ReInitializeParseEngine(int eflag, char *evalue)
 
         //fill the exp arrays with data 
 	if (eflag == 1) {
-	strcpy(expression, evalue);
-	mytrim(expression);
+	strcpy(Expression, evalue);
+	trim(Expression);
 			}
 	//case: if exp contains ()
 	//fill the expg global arrays with data
-	if (strrchr(expression, '(') != NULL) {
+	if (strrchr(Expression, '(') != NULL) {
 	complex = true;
         fprintf(logfile, "COMPLEX expression!\n");
 				       }
@@ -255,51 +255,51 @@ int ReInitializeParseEngine(int eflag, char *evalue)
              }
             
 	if (complex == false)
-	fill(expression);	
+	fill(Expression);	
 
 	if (complex == true)		{//start
 
         //clearExpGlobals(); //05/09/12 clear the exp globals array
         
-	exp_gn = tokenize(expression);
+	Exp_Global_Number = tokenize(Expression);
 
-        fprintf(logfile, "exp_gn is:%d\n", exp_gn);
+        fprintf(logfile, "exp_gn is:%d\n", Exp_Global_Number);
         //mytrim the exps
-        for (i=0; i < exp_gn; i++) {
-        mytrim(expg[i]);
+        for (i=0; i < Exp_Global_Number; i++) {
+        trim(expression_Global[i]);
                                    }
 
         //start logic
-        for (i=0; i < exp_gn; i++) {
+        for (i=0; i < Exp_Global_Number; i++) {
         l=0;
-        if (expg[i][l] == '&' || expg[i][l] == '|') {
-                plogic[i] = expg[i][l];
-                expg[i][l] = ' ';
+        if (expression_Global[i][l] == '&' || expression_Global[i][l] == '|') {
+                plogic[i] = expression_Global[i][l];
+                expression_Global[i][l] = ' ';
                                                     }
                                    }
         //end logic
-        for (i=0; i < exp_gn; i++) {
-        l = strlen(expg[i]);
+        for (i=0; i < Exp_Global_Number; i++) {
+        l = strlen(expression_Global[i]);
         l--;
-        if (expg[i][l] == '&' || expg[i][l] == '|') {
+        if (expression_Global[i][l] == '&' || expression_Global[i][l] == '|') {
                 if (plogic[i] != '&' && plogic[i] != '|')
-                plogic[i] = expg[i][l];
+                plogic[i] = expression_Global[i][l];
                         else {
                         k=i; k++;
                 fprintf(logfile, "K is:%d\n", k);
-                plogic[k] = expg[i][l];
+                plogic[k] = expression_Global[i][l];
                              }
 
-                expg[i][l] = '\0';
+                expression_Global[i][l] = '\0';
                                                    }
                                    }
 
         //mytrim again
-        for (i=0; i < exp_gn; i++) {
-        mytrim(expg[i]);
+        for (i=0; i < Exp_Global_Number; i++) {
+        trim(expression_Global[i]);
                                    }
-        shuffle(exp_gn);
-        exp_gn = shuffle2(exp_gn);
+        shuffle(Exp_Global_Number);
+        Exp_Global_Number = shuffle2(Exp_Global_Number);
 					}//end of case: complex == true. ()
 	return 0;
 }
@@ -409,6 +409,108 @@ doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
 TotalMessagesReceived++;//count the number of BGP messages received
         return 0;
 }
+
+
+
+int receive_xml_static_buffer(char *filename)
+{
+xmlDoc *doc = NULL;
+xmlNode *root_element = NULL;
+int i,j;
+char filter[8];
+char refilter[9];
+
+int start_len_next;
+int msg_len;
+
+rcv = recv(peer_sock, MESSAGE.in, xmlStrlen(start_next), MSG_WAITALL);
+strcpy(MESSAGE.out, MESSAGE.in);
+
+start_len_next = strlen(MESSAGE.in);
+//start_len_next = xmlStrlen(start_next);
+
+//extract the real length
+//for (i=21, j=0; i<start_len_next, j < 8; i++, j++) { /* Wed May 21 11:16:27 PDT 2014 */
+
+/* avoid left-hand operand of comma expression has no effect [-Wunused-value] in gcc 4.8+ */
+for (i=21, j=0; j < 8; i++, j++) { /* Wed May 21 11:16:27 PDT 2014 */
+
+        filter[j] = MESSAGE.in[i];
+                                                   }
+strncpy(refilter, filter, 7);
+refilter[7] = filter[7];
+refilter[8] = 'x';//lets put a guard against accidental 0 in the string that might make a length value 10 times bigger...
+
+msg_len = atoi(refilter);
+
+if (msg_len >= MAX_LINE*MAX_LINE) /* skip message larger then a predefined size:  Tue Jun 10 11:43:47 PDT 2014 */
+{
+    fprintf(stderr, "receive_xml_static_buffer(): Message is too big! Skipping.\n");
+    return -1;
+}
+
+
+strcpy(MESSAGE.in, "");
+
+strcpy(MESSAGE.in, "\0"); /* Sat Jun 14 10:13:59 PDT 2014 */
+
+rcv = recv(peer_sock, MESSAGE.in, msg_len - start_len_next, MSG_WAITALL);
+
+strncat(MESSAGE.out, MESSAGE.in, msg_len - start_len_next); //stronger checking condition in case recv() is fooled...
+fprintf(logfile, "now we parse the MESSAGE.out in memory and get all the elements\n" );
+
+if (msg_len < MAX_LINE*512) /* Thu Nov 20 17:04:44 MST 2014 - trim buffer if it is less then that size */
+    trim(MESSAGE.out);
+
+/* introduce actual naive xml validity check before calling xmlParseMemory() to avoid seg faults caused by the library:  Sat Jun 14 10:13:59 PDT 2014 */
+if (MESSAGE.out[0] != '<' && MESSAGE.out[1] != 'X' && MESSAGE.out[2] != 'M' && MESSAGE.out[3] != 'L'  && MESSAGE.out[msg_len-1] != '>' && MESSAGE.out[msg_len-2] != 'E')
+{
+        fprintf(stderr, "receive_xml_static_buffer(): invalid xml document in the buffer! skipping.\n");
+        return (-1);
+}
+
+//XML stuff
+
+//doc = xmlReadMemory(data_ptr->out, sizeof(data_ptr->out), "next_bgp_m.xml", NULL, 0);
+//doc = xmlReadMemory(data_ptr->out, strlen(data_ptr->out), "buffer.xml", NULL, 0);
+
+//doc = xmlParseMemory(data_ptr->out, strlen(data_ptr->out)); /* a cleaner way to parse: Tue Jun 10 11:54:44 PDT 2014 */
+
+doc = xmlParseMemory(MESSAGE.out, msg_len); /* a cleaner way to parse: Wed Jun 11 17:15:38 MDT 2014 */
+
+//if (doc == NULL) {
+if (doc == NULL || doc == 0) {  /* sometimes 0 is returned instead of NULL - we have to accomodate that:  Sat Jun 14 11:32:07 MDT 2014 */  
+        fprintf(stderr, "receive_xml_static_buffer(): Failed to parse document!\n");
+        //xmlFreeDoc(doc); /* Thu Jun  5 17:50:48 MDT 2014 */
+        //fprintf(stdout, "receive_xml_static_buffer(): freed document!\n"); /* Thu Jun  5 17:50:48 MDT 2014 */
+        return (-1);
+                 }
+
+/*Get the root element node */
+root_element = xmlDocGetRootElement(doc);
+
+if (root_element == NULL) { /* Thu Jun  5 17:50:48 MDT 2014 */
+        fprintf(stderr, "receive_xml_static_buffer(): root element of the XML doc is NULL!\n");
+        xmlFreeDoc(doc);
+        doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
+        fprintf(stdout, "receive_xml_static_buffer(): freed document!\n");
+        return (-1);
+                          }
+
+
+analyze(filename, root_element);
+
+xmlFreeDoc(doc);
+
+doc = NULL; /*Fri Jun  6 15:27:46 MDT 2014 */
+
+root_element = NULL;  /* Wed Nov 19 17:16:58 MST 2014 */
+
+TotalMessagesReceived++;//count the number of BGP messages received
+        return 0;
+}
+
+
 
 int count(char * str)
 {
@@ -1216,7 +1318,7 @@ int clearExpGlobals(void)
 {
     int i = 0;
     
-    memset(expression, '\0', sizeof(expression));
+    memset(Expression, '\0', sizeof(Expression));
     
     memset(truth, '\0', sizeof(truth));
     
@@ -1231,8 +1333,8 @@ int clearExpGlobals(void)
                            }
     
     for (i=0; i < 256; i++) {
-		memset(expg[i], '\0', sizeof(expg[i]));
-		strcpy(expg[i], "");
+		memset(expression_Global[i], '\0', sizeof(expression_Global[i]));
+		strcpy(expression_Global[i], "");
                         } 
     
     //clear the globals
@@ -1258,7 +1360,7 @@ k= strlen(exp);
 while (l < k)
 {
 	if (exp[l] != '(' && exp[l] != ')') {
- 	expg[h][i] = exp[l];	
+ 	expression_Global[h][i] = exp[l];	
 		i++;
 		l++;
 			   		    }		
@@ -1292,11 +1394,16 @@ if (analyse(root_element) == 0)
 	return -1;
 }
 
-int mytrim(char *str)
+
+/* trims the string from both sides removing trailing spaces */
+int trim(char *str)
 {
 	int i,l;
-	char tmp[256];
-	char tm[256];
+        int size = strlen(str);
+        if (size > MAX_LINE*512) return -1;
+        
+	char tmp[size];
+	char tm[size];
 
 	memset(tmp, '\0', sizeof(tmp));
 	memset(tm, '\0', sizeof(tm));
@@ -1335,21 +1442,21 @@ int mytrim(char *str)
 int shuffle(int exp_gn)
 {
 int i, k;
-char exp_tmp[256][256];
+char exp_tmp[256][MAX_LINE];
 
 for (i=0; i < 256; i++){
 memset(exp_tmp[i], '\0', sizeof(exp_tmp[i]));
                        }
 
 	for (i=0, k=0; i < exp_gn; i++) {
-	if (strlen(expg[i]) != 0){
-		strcpy(exp_tmp[k], expg[i]);
+	if (strlen(expression_Global[i]) != 0){
+		strcpy(exp_tmp[k], expression_Global[i]);
 		k++;
 				 }
 					}
 	for (i=0; i < exp_gn; i++) {
-		memset(expg[i], '\0', sizeof(expg[i]));
-		strcpy(expg[i], exp_tmp[i]);
+		memset(expression_Global[i], '\0', sizeof(expression_Global[i]));
+		strcpy(expression_Global[i], exp_tmp[i]);
 		        	   }
 	return 0;
 }
@@ -1983,6 +2090,9 @@ msg_len = atoi(refilter);
 if (msg_len >= 512*MAX_LINE) /* skip message larger then a predefined size:  Thu Jun 19 14:53:13 MDT 2014 */
 {
     fprintf(stderr, "readDataFile(): Message is too big! Skipping.\n");
+    strcpy(buf, "");
+    memset(buff, '\0', sizeof(buff));
+    memset(buf, '\0', sizeof(buff));
     return -1;
 }
 
@@ -1995,12 +2105,28 @@ xlen = xmlStrlen((void *)buf);
 
 if (xlen > 8) //if less then that it is probably some junk...
 {
-    /* introduce actual naive xml validity check before calling xmlParseMemory() to avoid seg faults caused by the library:  Thu Jun 19 14:53:13 MDT 2014 */
-    if (buf[0] != '<' || buf[msg_len-1] != '>' || buf[msg_len] != '\0')
-    {
+    
+    if (msg_len < MAX_LINE*512) /* Fri Nov 21 11:39:07 MST 2014 - trim buffer if it is less then that size */
+        trim(buf);
+
+/* introduce actual naive xml validity check before calling xmlParseMemory() to avoid seg faults caused by the library: Fri Nov 21 11:39:07 MST 2014 */
+if (buf[0] != '<' && buf[1] != 'X' && buf[2] != 'M' && buf[3] != 'L'  && buf[msg_len-1] != '>' && buf[msg_len-2] != 'E')
+{
         fprintf(stderr, "readDataFile(): invalid xml document in the buffer! skipping.\n");
+        strcpy(buf, "");
+        memset(buff, '\0', sizeof(buff));
+        memset(buf, '\0', sizeof(buff));
         return (-1);
-    }
+}
+
+    
+    
+    /* introduce actual naive xml validity check before calling xmlParseMemory() to avoid seg faults caused by the library:  Thu Jun 19 14:53:13 MDT 2014 */
+//    if (buf[0] != '<' || buf[msg_len-1] != '>' || buf[msg_len] != '\0')
+//    {
+//        fprintf(stderr, "readDataFile(): invalid xml document in the buffer! skipping.\n");
+//        return (-1);
+//    }
         doc = xmlParseMemory(buf, msg_len); //changed size to msg_len instead of size_of(): Thu Jun 19 14:53:13 MDT 2014
         //if (doc == NULL)
         if (doc == NULL || doc == 0)  /* sometimes 0 is returned instead of NULL - we have to accomodate that:  Thu Jun 19 14:53:13 MDT 2014 */      
@@ -2300,45 +2426,45 @@ int fd;
 if (complex == true) {
 //section to use after receiving xml chunk
 
-        for (i=0; i < exp_gn; i++) {
+        for (i=0; i < Exp_Global_Number; i++) {
                 if (plogic[i] == '&')
 		and_found = true;	
 				   }
 
-        for (i=0; i < exp_gn; i++) {
-        if (harvest(expg[i], root_element) == 0)
+        for (i=0; i < Exp_Global_Number; i++) {
+        if (harvest(expression_Global[i], root_element) == 0)
         truth[i] = 1;
                                    }
 
-        for (i=0; i < exp_gn; i++)
+        for (i=0; i < Exp_Global_Number; i++)
         fprintf(logfile, "truth is:%d\n", truth[i]);
 
-        for (i=0; i < exp_gn; i++) {
+        for (i=0; i < Exp_Global_Number; i++) {
         if (plogic[i] == '&' && truth[i] == 1)
                         ;
                         else {
                 if (plogic[i] == '&' && truth[i] != 1)
-                        g_and = false;
+                        Global_AND = false;
                         break;
                              }
                                    }
 
-        for (i=0; i < exp_gn; i++) {
+        for (i=0; i < Exp_Global_Number; i++) {
         if (plogic[i] == '|' && truth[i] == 1) {
-                        g_or = true;
+                        Global_OR = true;
                         break;
 					       }
                                    }
-if ((g_and == true && and_found == true) || (g_or == true)) {
+if ((Global_AND == true && and_found == true) || (Global_OR == true)) {
 fprintf(logfile, "analyze: complex exp - g_and is true\n");
 fd = open (filename, O_CREAT | O_APPEND | O_RDWR, S_IRWU);
 if (bgp_m_ptr != NULL)
-write(fd, bgp_m_ptr, strlen(bgp_m));
+    write(fd, bgp_m_ptr, strlen(bgp_m));
 if (strlen (bgp_m) != 0)
-write(fd, bgp_m, strlen(bgp_m));
+    write(fd, bgp_m, strlen(bgp_m));
 fprintf(logfile, "analyze: complex exp - g_and is true - just about to write into file\n");
-if (data_ptr != NULL)
-write(fd, data_ptr->out, strlen(data_ptr->out));
+if (MESSAGE.out != NULL)
+    write(fd, MESSAGE.out, strlen(MESSAGE.out));
 //put the separator per message
 write(fd, "\n", strlen("\n"));
 fprintf(logfile, "analyze: complex exp - g_and is true - wrote into file\n");
@@ -2347,20 +2473,20 @@ MatchingMessages++; //increase the matching count
 
 //now we put the data in queue as well
 if (serverflag == 1) {
-if (data_ptr != NULL) {
-int xlen = strlen(data_ptr->out);
+if (MESSAGE.out != NULL) {
+int xlen = strlen(MESSAGE.out);
 	if (xlen > 64)  //if xmlR is an actual full BGP message........
 	{
 fprintf(logfile, "Writer: putting the message into the Queue\n" );
 //writeQueues((void *)data_ptr->out);
-writeQueueTable((void *) data_ptr->out);
+writeQueueTable((void *) MESSAGE.out);
 	} else
 fprintf(logfile, "Writer: not putting the message into the Queue\n" );
 		      }
 		}//end of server flag
 
-g_and = true; //restore to default
-g_or = false; //restore to default
+Global_AND = true; //restore to default
+Global_OR = false; //restore to default
 //initialize the parsing engine globals to nulls
 for (i=0; i < 256; i++)
         truth[i] = 0;
@@ -2472,11 +2598,11 @@ if (oracle_and == true || oracle_or == true || oracle == true)
 fprintf(logfile, "analyze: simple exp - one of the oracles is true\n");
 fd = open (filename, O_CREAT | O_APPEND | O_RDWR, S_IRWU);
 if (bgp_m_ptr != NULL)
-write(fd, bgp_m_ptr, strlen(bgp_m));
+    write(fd, bgp_m_ptr, strlen(bgp_m));
 if (strlen (bgp_m) != 0)
-write(fd, bgp_m, strlen(bgp_m));
-if (data_ptr != NULL)
-write(fd, data_ptr->out, strlen(data_ptr->out));
+    write(fd, bgp_m, strlen(bgp_m));
+if (MESSAGE.out != NULL)
+    write(fd, MESSAGE.out, strlen(MESSAGE.out));
 //put the separator per message
 write(fd, "\n", strlen("\n"));
 
@@ -2484,13 +2610,13 @@ MatchingMessages++; //increase the matching count
 
 //now we put the data in queue as well
 if (serverflag == 1) {
-if (data_ptr != NULL) {
-int xlen = strlen(data_ptr->out);
+if (MESSAGE.out != NULL) {
+int xlen = strlen(MESSAGE.out);
 	if (xlen > 64) //if xmlR is an actual full BGP message........
 	{
 fprintf(logfile, "Writer: putting the message into the Queue\n" );
 //writeQueues((void *)data_ptr->out);
-writeQueueTable((void *) data_ptr->out);
+writeQueueTable((void *) MESSAGE.out);
 	} else
 fprintf(logfile, "Writer: not putting the message into the Queue\n" );
 		      }
@@ -2684,9 +2810,9 @@ int clear(char * a, char * b, size_t s)
 
 int resetExp(void)
 {
-        strcpy(expression, "");
-        memset(expression, '\0', sizeof(expression));
-        strcpy(expression, "");
+        strcpy(Expression, "");
+        memset(Expression, '\0', sizeof(Expression));
+        strcpy(Expression, "");
         return 0;
 }
 
@@ -2757,7 +2883,7 @@ else if (strcmp(buffer, RESET_TRANSACTION_STR) == 0 || strcmp(buffer, "rt") == 0
         resetExp();
 else if (strcmp(buffer, SHOW_TRANSACTION_STR) == 0 || strcmp(buffer, "st") == 0)
         {
-        write(sock, (char *) expression, strlen((char *) expression));
+        write(sock, (char *) Expression, strlen((char *) Expression));
         write(sock, (char *) "\n", strlen((char *) "\n"));
         }
 else if (strcmp(buffer, TRANSACTION_STR) == 0 || strcmp(buffer, "ct") == 0)
@@ -2820,7 +2946,7 @@ if (serverflag == 1)
         }
         
     	xmlCleanupParser(); //Free the global libxml variables 
-        resetXmlBuff();
+        reset_static_XmlBuff();
 	
 	sigemptyset(&term_handler.sa_mask);
 	memset(&term_handler, 0, sizeof(term_handler));
@@ -2848,11 +2974,20 @@ int resetXmlBuff(void)
         return 0;
 }
 
+int reset_static_XmlBuff(void)
+{
+        MESSAGE.type = 0;
+        memset(MESSAGE.in, '\0', sizeof(MESSAGE.in));
+        memset(MESSAGE.out, '\0', sizeof(MESSAGE.out));
+
+        return 0;
+}
+
 void processStream(void)
 {
  while (terminateFlag != 1) {
 
-data_ptr = malloc(sizeof(data));
+data_ptr = malloc(sizeof(MESSAGE));
 
 if (data_ptr == NULL) { data_ptr = NULL; return; } //KB: have to check memory allocation
 
@@ -2881,6 +3016,22 @@ data_ptr = NULL;
 
           		   }//end of main loop   
 }
+
+
+void processStream_static_buffer(void)
+{
+ while (terminateFlag != 1) {
+    MESSAGE.type = 0;
+    memset(MESSAGE.in, '\0', sizeof(MESSAGE.in));
+    memset(MESSAGE.out, '\0', sizeof(MESSAGE.out));
+
+    strcpy(MESSAGE.in, "");
+    strcpy(MESSAGE.out, "");
+
+    receive_xml_static_buffer(filename);
+          		   }//end of main loop   
+}
+
 
 int reset_key(void)
 {

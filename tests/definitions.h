@@ -81,7 +81,7 @@ char **pptr;
         struct sockaddr_in cli_sin;
 
 //xml object pointers
-	struct xml data;
+	struct xml MESSAGE;
 	struct xml *data_ptr = NULL;
 	
 //buffers for holding incoming xml streams	
@@ -114,7 +114,7 @@ char **pptr;
 	
         //bool complex = false;
 	
-        int exp_gn;
+        int Exp_Global_Number;
 
 struct sigaction handler;//signal handler mainly for SIGPIPE blocking
 struct sigaction term_handler;//signal handler for TERM like signals
@@ -125,7 +125,7 @@ pthread_mutex_t         terminateLock;
 static int threadIDCounter = 0; //counter to keep track of Reader's ID
 pthread_mutex_t         threadIDLock;
 
-char expression[MAX_LINE];/* assume the cmd-line expression is that long....  */
+char Expression[MAX_LINE];/* assume the cmd-line expression is that long....  */
 
 xmlDoc *doc = NULL;
 xmlNode *root_element = NULL;
@@ -164,7 +164,7 @@ const char TeleScopeLog[] = "/var/log/telescope.log";//default log file location
 
 //XML object structure: in - incoming raw data stream; out - refined xml data object
 struct xml {
-char type;
+int type;
 char in[MAX_LINE*MAX_LINE];
 char out[MAX_LINE*MAX_LINE];
            };
@@ -200,7 +200,7 @@ char value[256][256];
 //parsing engine globals
 int truth[256];
 char plogic[256];
-char expg[256][256];
+char expression_Global[256][256];
 
 //
 //functions' declarations
@@ -253,7 +253,7 @@ int analyse (xmlNode *root_element);
 int clear(char *a, char *b, size_t s); //clear the arrays via memset()
 
 //parsing engine functions
-int mytrim(char *str);
+int trim(char *str);
 int tokenize(char *exp);
 int shuffle2(int exp_gn);
 int shuffle(int exp_gn);
