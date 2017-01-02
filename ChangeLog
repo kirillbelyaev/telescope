@@ -1,0 +1,52 @@
+
+Changes in telescope 1.0.1: /05/11/13/
+
+Fixed null pointer bug that caused seg. faults when stream is interrupted
+added memory allocation checks
+fixed "socket on non-socket operation" due to unused variable use - was causing failure to start the clients thread pool
+general stability checks performed 
+
+
+Changes in telescope 1.0.2: /05/19/13/
+
+Added the daemon mode when telescope is in server mode - no need to use & in the shell any more to put the process in the background
+Separated the publisher and subscriber modes - telescope now could operate in any of the modes independently
+Publisher mode does not require to subscribe to the remote XML stream any more and can just serve the data file to subscribers.
+addressed the password bug when connecting to port 50005 of the telescope instance running in the server mode
+Reorganized the project directory structure - added src, doc, scripts directories & arranged files accordingly
+
+Changes in telescope 1.0.2: /05/20/13/
+
+Fixed the filename parameter bug - forced the -f parameter check
+
+
+Changes in telescope 1.0.2: /07/07/13/
+
+Added the XML Converter java utility and sample data files
+
+
+Changes in telescope 1.0.2: /05/22/14 - /05/28/14
+
+Changed some code constructs to avoid compilation errors under gcc 4.8+
+made executable continue to process stream (instead of terminating) after encountering the malformed message - robustness improvement
+moved sample data files into the data directory
+Changed the definition of the service ports: active ports now are: 50000, 50001, 50002
+Added the ports info printed at stdout for every run 
+
+
+
+Changes in telescope 1.0.2: /06/03/14
+
+Improvements in the ppt presentation and added a new directory for XML converter utility
+
+
+Changes in telescope 1.0.2: /11/18/14
+
+Improvements in the XML converter utility - added support for generic XML obtained from Yahoo! Services where XML is not strictly separated by new lines
+Added sample S&P500 XML data samples obtained from Yahoo! Finance to the tpc-h samples directory
+
+
+Changes in telescope 1.0.3: /12/15/14
+Refactoring of some global variables and constants and function names for clarity
+MAJOR: Shift from malloc() to static buffer approach for stream processing to avoid seg faults in the client (sub) mode caused by excessive benchmarking when XML messages are arriving too fast
+Added extra validity checks in some XML processing parts of the code to minimize the errors from the libxml so that we try to provide valid XML input to the library

@@ -1,0 +1,30 @@
+/*
+Copyright (c) 2012-2014  Kirill Belyaev
+ * kirillbelyaev@yahoo.com
+ * kirill@cs.colostate.edu
+ * TeleScope - XML Message Stream Broker/Replicator Platform
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License. 
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/3.0/ or send 
+ * a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+*/
+
+Prerequisite: Java should be installed
+
+In order to use the utility to convert standard XML data file into TeleScope XML data file that is ready for publication do the following:
+
+cd XMLConverter
+
+execute the xmlconverter.sh script. 
+
+It should print out the usage instructions.
+
+In order to convert a sample TPC-H data file specify the main element tag for each XML message - in case of provided data set it is <T> element:
+
+./xmlconverter.sh  T ../tpc-h-xml-data/lineitem.xml  ../tpc-h-xml-data/lineitem-converted.xml
+
+In order to convert a sample NASDAQ quotes data file specify the main element tag for each XML message - in case of provided data set it is <Quote> element:
+
+./xmlconverter.sh  Quote ../tpc-h-sample-xml-data/nasdaq.xml  ../tpc-h-sample-xml-data/nasdaq-converted.xml
+
+
+Load data into TeleScope via a -d cmd flag.

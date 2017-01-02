@@ -1,0 +1,88 @@
+/*
+Copyright (c) 2012-2014  Kirill Belyaev
+ * kirillbelyaev@yahoo.com
+ * kirill@cs.colostate.edu
+ * TeleScope - XML Message Stream Broker/Replicator Platform
+ * This work is licensed under the Creative Commons Attribution-NonCommercial 3.0 Unported License. 
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/3.0/ or send 
+ * a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+*/
+
+/*
+"DION
+The violent carriage of it
+Will clear or end the business: when the oracle,
+Thus by Apollo's great divine seal'd up,
+Shall the contents discover, something rare
+Even then will rush to knowledge. Go: fresh horses!
+And gracious be the issue!"
+
+Winter's Tale, Act 3, Scene 1. William Shakespeare
+*/
+
+TeleScope is the efficient intensive-load XML message stream broker written in C for the Fedora 17-18, Slackware 13-14, Red Hat Enterprise Linux 6 (RHEL-6) Linux distributions.
+
+
+####################
+# WHY do you need it? #
+####################
+
+The general scenario for TeleScope deployment is the need for consistent/selective replication of XML message stream from a single source publisher to multiple destinations for ETL (Extract, Transform, Load) purposes. The replication is formed through establishing a network of interconnected TeleScope brokers:
+
+1. publish/distribute remote content from remote publisher to local subscribers - all subscribers should have the same consistent replication when all subs receive all the messages in the stream (filtered at a single entry point)
+
+2. publish/distribute remote content from remote publisher to local subscribers - all subscribers then can filter content they need (filtered at a single entry point)
+
+3. publish/distribute local XML content to a set of subscribers - subscribers then can filter the messages they want to save
+
+
+Local distribution example:
+
+Applications are generating XML data that needs to be replicated to other applications/databases.
+
+For example central weather application dumps continental US weather data in XML format - you need to distribute specific geographic regions covered by weather data to different nodes that then run ETL on the data. 
+
+Run XMLConverter utility (supplied) to continuously convert XML data into TeleScope XML format ready for streaming. 
+
+Run TeleScope to publish converted XML data to subscribers in other parts of the network segment. 
+Each TeleScope subscriber filters and saves only messages relevant to itself for further ETL.
+
+############
+
+INSTALLATION
+
+NOTE: The TeleScope system has been compiled and tested ONLY on the latest Fedora 17 - 18, Red Hat Enterprise Linux 6 (RHEL-6) and Slackware 13.37.0 - 14.0 Linux distributions.
+
+Prerequisites:
+
+Development libraries including gcc and make utility,  gnome libxml2 headers (libxml2-devel)
+
+untar the telescope-version-X.tar and cd into the project directory 
+type make clean to remove stale .o files
+type make all in the current project directory to compile TeleScope
+the executable is installed in ./bin/telescope
+copy the ./bin/telescope executable to the desired directory (typically /usr/local/bin/telescope )
+
+Run-time Command-line options:
+
+-s - turn on server mode
+-l - turn logging on to file
+-d - turn XML data file reading on to populate the Queue Table from the file - provide data file name
+-h - hostname to connect to
+-p - port number for the host to connect to
+-f - filename to write the captured xml messages  (mandatory: name for text data ﬁle)
+-e - query expression to match in the xml data stream
+
+Example use:
+
+Run in publisher/subscriber mode - connect to publisher and serve stream to subscribers
+./bin/telescope -s - h xmlhub.com -p 8080 -f test.txt -e "type = UPDATE"
+./bin/telescope -s - h xmlhub.com -p 8080 -f test.txt -e "AFI = IPV6"
+
+become a server and publish xml messages from file:
+./bin/telescope -f /dev/null -e "" -d xmldataS.txt -s &
+
+become a subscriber to host volga on port 50000
+./bin/telescope -h volga -p 50000 -f data -e "station_id = 42362" &
+
+./scripts/telescope-stop.sh - stop TeleScope

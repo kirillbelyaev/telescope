@@ -1,0 +1,289 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margins=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{TeleScope CQ Query Engine Language Specification}
+\author{Kirill Belyaev, Fort Collins, CO, USA, 80523}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+\section{The tutorial based on BGP (Border Gateway Protocol) routing data analysis}
+
+	Current TeleScope CQ implementation employs XML parsing and specific pattern-matching that provides standard logical operator constructs to combine the XML attributes into a pattern set that is applied to the XML message packed in the XML format on the fly as it is received from the network. The whole pattern-matching expression starts with the -e (expression) command line option and is enclosed within the double quotes  (“" "”). The transaction could then be altered or reset via the CLI interface through connecting to port 50005 of the running TeleScope CQ instance. The expression from the remote CLI interface is not delimited by "".  The example expression could be modeled as:
+
+ -e "(MULTI\_EXIT\_DISC \textless 10 \& SRC\_AS = 6447 \& type = MESSAGE) \textbar \space (ORIGIN = EGP \& value = 0)"
+
+The expression could be considered either:
+\begin{itemize}
+\item{simple -- involving only one subexpression and one type of logical operators}
+\item{complex -- involving more then one subexpression and two types of logical operators - OR and AND  (like the expression above)}
+\end{itemize}
+
+The complex expression could be constructed out of a number (two and more) of simple subexpressions connected via a logical \textbar \space OR operator and a set of parentheses. 
+
+Sample tables for simple and complex expressions are shown next.
+
+\begin{table}[ht] 
+\caption{Simple Expression } % title of Table 
+\centering      % used for centering table 
+\begin{tabular}{c c}  % centered columns (3 columns) 
+\hline\hline                        %inserts double horizontal lines 
+Example & Description \\ [0.25ex] % inserts table 
+%heading 
+\hline
+“"expr1”" & 1: should NOT have parentheses \\
+“"”" & 2: empty expr \\
+
+“"type = UPDATE”" & 1 tuple \\
+“"ORIGIN = IGP”" & 1 tuple \\
+
+"type = UPDATE \& SRC\_AS = 6447”" & 2 tuples \\
+"MULTI\_EXIT\_DISC = 100  \& SRC\_PORT = 4321" & 2 tuples \\
+
+"type = UPDATE \textbar \space DST\_AS = 3200" & 2 tuples \\
+"type = MESSAGE  \textbar \space type = STATUS" & 2 tuples \\
+
+"type = UPDATE  \textbar  \space type = MESSAGE  \textbar \space type = KEEPALIVE" & 3 tuples \\
+"MULTI\_EXIT\_DISC = 100 \textbar \space SRC\_AS = 6447 \textbar \space SRC\_PORT = 4321" & 3 tuples \\
+
+\hline
+\end{tabular} 
+\label{table:Simple Expression}
+\end{table} 
+
+
+\begin{table}[ht] 
+\caption{Complex expression} % title of Table 
+\centering      % used for centering table 
+\begin{tabular}{c c}  % centered columns (3 columns) 
+\hline\hline                        %inserts double horizontal lines 
+%Example: LCO could be \& or \textbar & Description \\ [0.25ex] % inserts table 
+Example: LCO is \textbar & Description \\ [0.25ex] % inserts table 
+%heading 
+\hline\hline
+“"(subexpr1) LCO  (subexpr2)”"  &  2 subexprs\\
+\hline
+"(type = STATUS) \textbar \space (type = UPDATE)"  & 2 subexprs \\
+\hline
+“"(subexpr1) LCO  (subexpr2) LCO  (subexpr3)”" & 3 subexprs \\
+\hline
+"(type = STATUS) \textbar \space (type = UPDATE) \textbar \space (type = KEEPALIVE)" & 3 subexprs \\
+\hline
+\end{tabular} 
+\label{table:Complex expression}
+\end{table} 
+
+Due to complexity of constructing regular expressions using -e command-line option  we should follow the following guidelines:
+
+\begin{itemize}
+
+\item{simple expression should NOT include ( ) parentheses: otherwise it would not be evaluated properly}
+
+\item{simple expression has only ONE type of logical operator - it is either OR \textbar \space or AND \&}
+
+\item{simple expression could have one or more tuples - see simple expression table}
+
+\item{complex expression must have more then one set of ( ) parentheses - see complex expression table}
+
+\item{\textbar \space OR operator is the only operator used to chain subexpressions in complex expression involving multiple ( ) parentheses: (e1) \textbar \space (e2) }
+
+\item{\textbar \space OR operator could NOT be used inside the ( ) parentheses}
+
+\item{\& AND operator could NOT be used to chain subexpressions in complex expression involving  multiple ( ) parentheses}
+
+\item{\& AND operator must be used inside the ( ) parentheses in complex expressions}
+
+\item{\textbar \space  and \& could not be used within a single expression enclosed in ( ) parentheses or within a single simple expression}
+
+\end{itemize}
+
+
+
+Here we provide the sample use cases of valid and invalid expressions:
+\begin{itemize}
+
+\item{-e "type = STATUS \textbar \space type = UPDATE" - valid simple expression}
+\item{-e "type = STATUS \textbar \space type = UPDATE \textbar \space type = KEEPALIVE" - valid simple expression}
+\item{-e "type = UPDATE \& SRC\_AS = 6447" - valid simple expression}
+\item{-e "type = UPDATE" - valid simple expression}
+
+
+\item{-e "(type = STATUS) \textbar \space (type = UPDATE)" - valid complex expression}
+\item{-e "(type = STATUS) \textbar \space (type = UPDATE) \textbar \space (type = KEEPALIVE)" - valid complex expression} 
+\item{-e "(type = UPDATE)" - invalid complex expression - only 1 set of ( ) parentheses}
+\item{-e "(type = STATUS \textbar \space type = UPDATE)" - invalid complex expression - only 1 set of ( ) parentheses}
+\item{-e "(type = UPDATE \& SRC\_AS = 6447)" - invalid complex expression - only 1 set of ( ) parentheses}
+
+\item{-e "(type = UPDATE) \& (SRC\_AS = 6447)" - invalid complex expression - \& should not be used to chain the ( ) parentheses}
+
+\item{-e "(type = STATUS) \textbar \space (type = UPDATE \& MULTI\_EXIT\_DISC = 100) \textbar \space (MULTI\_EXIT\_DISC = 10) \textbar \space (type = KEEPALIVE \& DST\_AS \textgreater 3200)" - valid complex expression}
+\item{-e "(type = STATUS) \textbar \space (type = UPDATE \& MULTI\_EXIT\_DISC = 100 \& SRC\_AS = 6447 \& SRC\_PORT = 4321 \& ORIGIN = EGP) \textbar \space (MULTI\_EXIT\_DISC = 10 \& SRC\_AS = 6447 \& SRC\_PORT = 4321 \& ORIGIN = EGP) \textbar \space (type = KEEPALIVE \& DST\_AS \textgreater 3200)" - valid complex expression}
+
+\end{itemize}
+
+To summarize the following two points should be taken into consideration when constructing complex expression:
+\begin{itemize}
+
+\item{\textbar \space operator is used OUTSIDE of ( ) parentheses: "(exp1) \textbar \space (exp2) \textbar \space (exp3)"}
+\item{\& operator is used INSIDE of ( ) parentheses: "(tuple1 \& tuple2) \textbar \space (tuple3 \& tuple4 \& tuple5) \textbar \space (tuple6 \& tuple7)"}
+
+\end{itemize}
+
+The TeleScope CQ Language operators are presented in the  Table \ref{table:language operators} with sample use cases\label{table:language operators}.
+\begin{table}[ht] 
+\caption{TeleScope CQ Language operators } % title of Table 
+\centering      % used for centering table 
+\begin{tabular}{c c c}  % centered columns (3 columns) 
+\hline\hline                        %inserts double horizontal lines 
+Operator & Description & Example use \\ [0.25ex] % inserts table 
+%heading 
+\hline                    % inserts single horizontal line 
+=  & equality operator & ORIGIN = EGP \\   % inserting body of the table 
+
+! & not-equal operator & SRC\_AS ! 6447 \\
+
+\textless  & relational less than operator & MULTI\_EXIT\_DISC \textless 10 \\
+
+\textgreater  & relational greater than operator & MULTI\_EXIT\_DISC \textgreater 10 \\
+
+\& & logical AND  &  ORIGIN = EGP \& value = 0 \\
+
+\textbar \space & logical OR & ORIGIN = EGP \textbar \space value = 1 \\
+
+()  & parentheses & (ORIGIN = EGP \& value = 0) \textbar \space (type = MESSAGE) \\ [1ex]  % [1ex] adds vertical space 
+\hline     %inserts single line 
+\end{tabular} 
+\label{table:language operators}  % is used to refer  to this table in the text 
+\end{table} 
+
+Parentheses  are used for complex expression handling separating subexpressions within a single complex expression as shown in the last column of the table. The () parentheses are chained through logical OR operator.
+
+%= (equality operator). Example use: ORIGIN = EGP
+
+%! (not-equal operator). Example use: SRC\_AS ! 6447
+
+%< (relational less than operator). Example use: MULTI\_EXIT\_DISC < 10
+
+%> (relational greater than operator). Example use: MULTI\_EXIT\_DISC > 10
+
+%\& (logical AND). Example use:   ORIGIN = EGP \& value = 0
+
+%| (logical OR). Example use: ORIGIN = EGP | value = 1
+
+%() (parentheses) – used for complex expression handling separating subexpressions within a single complex expression. Example use:  (ORIGIN = EGP \& value = 0) | (type = MESSAGE)
+
+TeleScope CQ provides a set of operators designed specifically for processing network prefixes including CIDR ranges.  The operators follow the designated network prefix element (in our example it is the PREFIX attribute within the BGP XML Message) with the subsequent network range value. These are ordinary English letters having special meaning when used within the expression\label{table:prefix operators}.
+\begin{table}[ht] 
+\caption{Prefix operators } % title of Table 
+\centering      % used for centering table 
+\begin{tabular} %{c c c}  % centered columns (3 columns) 
+{ | l | l | l | p{5cm} |}
+\hline\hline                        %inserts double horizontal lines 
+Operator & Description & Example use & Semantics \\ [0.25ex] % inserts table 
+%heading 
+\hline                    % inserts single horizontal line 
+e  & exact prefix match operator & PREFIX e 211.64.0.0/8 & matching the networks with the exactly defined network prefix range. \\ \hline
+
+l  & less specific prefix match operator & PREFIX l 211.64.0.0/8 & matching the networks with less specific network prefix range. \\ \hline
+
+m & more specific prefix match operator & PREFIX m 211.64.0.0/8 & matching the networks with more specific network prefix range.  \\ \hline
+\end{tabular} 
+\label{table:prefix operators}  % is used to refer  to this table in the text 
+\end{table} 
+
+%e (equal prefix match operator). Example use:   PREFIX e 211.64.0.0/8
+%Results in  matching the networks with the exactly defined network prefix range. 
+
+%l (less specific prefix match operator).   Example use:   PREFIX l 211.64.0.0/8
+%Results in  matching the networks with less specific network prefix range. 
+
+%m (more specific prefix match operator).   Example use:   PREFIX l 211.64.0.0/8
+%Results in  matching the networks with more specific network prefix range. 
+
+Equality and negations  operators (= and !) could be used in expressions involving both string and integer values and change the semantics of operation depending on operand type.
+
+\section{Example transaction management via the CLI interface}
+
+bash-3.2\$ telnet hostname 50005
+
+Connected to hostname.
+Enter password:
+
+shell\_:h
+
+available commands are :
+
+help (h); exit (q); show transaction (st); change transaction (ct); reset transaction (rt); shutdown (sd)
+
+shell\_:st
+
+type ! NULL
+
+shell\_:ct
+
+enter new transaction:
+
+type = STATUS
+
+shell\_:st
+
+type = STATUS
+
+shell\_:
+
+
+\end{document}
